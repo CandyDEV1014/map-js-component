@@ -1,0 +1,479 @@
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Map Application</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" />
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
+</head>
+
+<body>
+    <div class="wrapper">
+        <div class="container">
+            <div class="map-wrapper mt-4">
+                <div class="row mb-3 justify-content-center">
+                    <div class="col-sm-5 d-flex align-items-center">
+                        <span class="col-sm-auto">Show data by metric:</span>
+                        <select class="form-control" name="metrics" id="metrics">
+                            <option value="clicks">Clicks</option>
+                            <option value="impressions">Impressions</option>
+                            <option value="cost">Cost</option>
+                            <option value="ctr">CTR</option>
+                            <option value="avg_cpc">Average CPC</option>
+                            <option value="conv">Conv</option>
+                            <option value="conv_cost">Cost/conv</option>
+                            <option value="conv_rate">Conv.rate</option>
+                            <option value="conv_value">Conv.value</option>
+                            <option value="conv_per_value">Value per conv</option>
+                            <option value="allconv">All conv</option>
+                            <option value="allconv_cost">Cost/all conv</option>
+                            <option value="allconv_rate">All conv.rate</option>
+                            <option value="allconv_value">All conv.value</option>
+                            <option value="allconv_per_value">Value per all conv</option>
+                        </select>
+                    </div>
+                    <div class="col-sm-4 d-flex align-items-center">
+                        <span class="mr-2">Show data by:</span>
+                        <div id="style_method">
+                            <span class="radio-inline mr-2"><input type="radio" class="mr-1" name="method" checked
+                                    value="bubble">Bubble Size</span>
+                            <span class="radio-inline"><input type="radio" class="mr-1" name="method"
+                                    value="color">Color</span>
+                        </div>
+
+                    </div>
+                </div>
+                <div id="map"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- plugin initialization -->
+    <script type="text/javascript">
+        const data = [
+            {
+                name: "Autauga",
+                coordinates: { latitude: "32.53952745", longitude: "-86.64408227" },
+                metrics: { 
+                    clicks: 4627,
+                    impressions: 7986,
+                    cost: 3295,
+                    ctr: 2.3,
+                    avg_cpc: 3348,
+                    conv: 9637,
+                    conv_cost: 7664,
+                    conv_rate: 2.0,
+                    conv_value: 6488,
+                    conv_per_value: 7684,
+                    allconv: 5147,
+                    allconv_cost: 4227,
+                    allconv_rate: 1.7,
+                    allconv_value: 7773,
+                    allconv_per_value: 8983
+                },
+            },
+            {
+                name: "Aleutians East",
+                coordinates: { latitude: "55.32222414", longitude: "-161.9722021" },
+                metrics: {
+                    clicks:2415,
+                    impressions: 9674,
+                    cost: 7830,
+                    ctr: 1.9,
+                    avg_cpc: 7480,
+                    conv: 8922,
+                    conv_cost: 4186,
+                    conv_rate: 1.1,
+                    conv_value: 2912,
+                    conv_per_value: 6924,
+                    allconv: 3075,
+                    allconv_cost: 6385,
+                    allconv_rate: 2.6,
+                    allconv_value: 6542,
+                    allconv_per_value: 3117,
+                },
+            },
+            {
+                name: "Apache",
+                coordinates: { latitude: "35.39465006", longitude: "-109.4892383" },
+                metrics: {
+                    clicks: 1989,
+                    impressions: 2819,
+                    cost: 7616,
+                    ctr: 2.5,
+                    avg_cpc: 3249,
+                    conv: 5799,
+                    conv_cost: 9931,
+                    conv_rate: 1.8,
+                    conv_value: 3048,
+                    conv_per_value: 8232,
+                    allconv: 4552,
+                    allconv_cost: 7139,
+                    allconv_rate: 1.4,
+                    allconv_value: 5847,
+                    allconv_per_value: 5774,
+                },
+            },
+            {
+                name: "Arkansas",
+                coordinates: { latitude: "34.29145151", longitude: "-91.37277296" },
+                metrics: {
+                    clicks: 5692,
+                    impressions: 5199,
+                    cost: 1714,
+                    ctr: 2.7,
+                    avg_cpc: 7055,
+                    conv: 3252,
+                    conv_cost: 5847,
+                    conv_rate: 1.1,
+                    conv_value: 6994,
+                    conv_per_value: 3588,
+                    allconv: 2306,
+                    allconv_cost: 2514,
+                    allconv_rate: 2.4,
+                    allconv_value: 8997,
+                    allconv_per_value: 9070,
+                },
+            },
+            {
+                name: "Alameda",
+                coordinates: { latitude: "37.64629437", longitude: "-121.8929271" },
+                metrics: {
+                    clicks: 7694,
+                    impressions: 9282,
+                    cost: 8778,
+                    ctr: 2.0,
+                    avg_cpc: 5287,
+                    conv: 3791,
+                    conv_cost: 9675,
+                    conv_rate: 1.7,
+                    conv_value: 8166,
+                    conv_per_value: 8014,
+                    allconv: 4599,
+                    allconv_cost: 1513,
+                    allconv_rate: 2.3,
+                    allconv_value: 2741,
+                    allconv_per_value: 3580,
+                },
+            },
+            {
+                name: "London",
+                coordinates: { latitude: "51.5073219", longitude: "-0.1276474" },
+                metrics: {
+                    clicks: 6548,
+                    impressions: 9282,
+                    cost: 8778,
+                    ctr: 2.0,
+                    avg_cpc: 5287,
+                    conv: 3791,
+                    conv_cost: 9675,
+                    conv_rate: 1.7,
+                    conv_value: 8166,
+                    conv_per_value: 8014,
+                    allconv: 4599,
+                    allconv_cost: 1513,
+                    allconv_rate: 2.3,
+                    allconv_value: 2741,
+                    allconv_per_value: 3580,
+                },
+            },
+            {
+                name: "Visakhapatnam",
+                coordinates: { latitude: "17.7231276", longitude: "83.3012842" },
+                metrics: {
+                    clicks: 3215,
+                    impressions: 9282,
+                    cost: 8778,
+                    ctr: 2.0,
+                    avg_cpc: 5287,
+                    conv: 3791,
+                    conv_cost: 9675,
+                    conv_rate: 1.7,
+                    conv_value: 8166,
+                    conv_per_value: 8014,
+                    allconv: 4599,
+                    allconv_cost: 1513,
+                    allconv_rate: 2.3,
+                    allconv_value: 2741,
+                    allconv_per_value: 3580,
+                },
+            },
+            {
+                name: "Akishima",
+                coordinates: { latitude: "35.70248", longitude: "139.350065" },
+                metrics: {
+                    clicks: 4895,
+                    impressions: 9282,
+                    cost: 8778,
+                    ctr: 2.0,
+                    avg_cpc: 5287,
+                    conv: 3791,
+                    conv_cost: 9675,
+                    conv_rate: 1.7,
+                    conv_value: 8166,
+                    conv_per_value: 8014,
+                    allconv: 4599,
+                    allconv_cost: 1513,
+                    allconv_rate: 2.3,
+                    allconv_value: 2741,
+                    allconv_per_value: 3580,
+                },
+            },
+            {
+                name: "Blaxland",
+                coordinates: { latitude: "-33.7460755", longitude: "150.6092697" },
+                metrics: {
+                    clicks: 2695,
+                    impressions: 9282,
+                    cost: 8778,
+                    ctr: 2.0,
+                    avg_cpc: 5287,
+                    conv: 3791,
+                    conv_cost: 9675,
+                    conv_rate: 1.7,
+                    conv_value: 8166,
+                    conv_per_value: 8014,
+                    allconv: 4599,
+                    allconv_cost: 1513,
+                    allconv_rate: 2.3,
+                    allconv_value: 2741,
+                    allconv_per_value: 3580,
+                },
+            },
+            {
+                name: "Chastre",
+                coordinates: { latitude: "50.6082727", longitude: "4.6385565" },
+                metrics: {
+                    clicks: 2695,
+                    impressions: 9282,
+                    cost: 8778,
+                    ctr: 2.0,
+                    avg_cpc: 5287,
+                    conv: 3791,
+                    conv_cost: 9675,
+                    conv_rate: 1.7,
+                    conv_value: 8166,
+                    conv_per_value: 8014,
+                    allconv: 4599,
+                    allconv_cost: 1513,
+                    allconv_rate: 2.3,
+                    allconv_value: 2741,
+                    allconv_per_value: 3580,
+                },
+            },
+            {
+                name: "Aldingen",
+                coordinates: { latitude: "48.092217", longitude: "8.7025341" },
+                metrics: {
+                    clicks: 3776,
+                    impressions: 9282,
+                    cost: 8778,
+                    ctr: 2.0,
+                    avg_cpc: 5287,
+                    conv: 3791,
+                    conv_cost: 9675,
+                    conv_rate: 1.7,
+                    conv_value: 8166,
+                    conv_per_value: 8014,
+                    allconv: 4599,
+                    allconv_cost: 1513,
+                    allconv_rate: 2.3,
+                    allconv_value: 2741,
+                    allconv_per_value: 3580,
+                },
+            },
+            {
+                name: "Lambohov",
+                coordinates: { latitude: "58.3875595", longitude: "15.5661308" },
+                metrics: {
+                    clicks: 5428,
+                    impressions: 9282,
+                    cost: 8778,
+                    ctr: 2.0,
+                    avg_cpc: 5287,
+                    conv: 3791,
+                    conv_cost: 9675,
+                    conv_rate: 1.7,
+                    conv_value: 8166,
+                    conv_per_value: 8014,
+                    allconv: 4599,
+                    allconv_cost: 1513,
+                    allconv_rate: 2.3,
+                    allconv_value: 2741,
+                    allconv_per_value: 3580,
+                },
+            },
+            {
+                name: "Abeokuta",
+                coordinates: { latitude: "7.1547129", longitude: "3.3467344" },
+                metrics: {
+                    clicks: 4368,
+                    impressions: 9282,
+                    cost: 8778,
+                    ctr: 2.0,
+                    avg_cpc: 5287,
+                    conv: 3791,
+                    conv_cost: 9675,
+                    conv_rate: 1.7,
+                    conv_value: 8166,
+                    conv_per_value: 8014,
+                    allconv: 4599,
+                    allconv_cost: 1513,
+                    allconv_rate: 2.3,
+                    allconv_value: 2741,
+                    allconv_per_value: 3580,
+                },
+            },
+            {
+                name: "Langata",
+                coordinates: { latitude: "-1.305155", longitude: "36.825859" },
+                metrics: {
+                    clicks: 1875,
+                    impressions: 9282,
+                    cost: 8778,
+                    ctr: 2.0,
+                    avg_cpc: 5287,
+                    conv: 3791,
+                    conv_cost: 9675,
+                    conv_rate: 1.7,
+                    conv_value: 8166,
+                    conv_per_value: 8014,
+                    allconv: 4599,
+                    allconv_cost: 1513,
+                    allconv_rate: 2.3,
+                    allconv_value: 2741,
+                    allconv_per_value: 3580,
+                },
+            },
+            {
+                name: "Windhoek",
+                coordinates: { latitude: "-22.5743922", longitude: "17.0790688" },
+                metrics: {
+                    clicks: 2681,
+                    impressions: 9282,
+                    cost: 8778,
+                    ctr: 2.0,
+                    avg_cpc: 5287,
+                    conv: 3791,
+                    conv_cost: 9675,
+                    conv_rate: 1.7,
+                    conv_value: 8166,
+                    conv_per_value: 8014,
+                    allconv: 4599,
+                    allconv_cost: 1513,
+                    allconv_rate: 2.3,
+                    allconv_value: 2741,
+                    allconv_per_value: 3580,
+                },
+            },
+            {
+                name: "Taraz",
+                coordinates: { latitude: "42.872445", longitude: "71.4181276" },
+                metrics: {
+                    clicks: 3729,
+                    impressions: 9282,
+                    cost: 8778,
+                    ctr: 2.0,
+                    avg_cpc: 5287,
+                    conv: 3791,
+                    conv_cost: 9675,
+                    conv_rate: 1.7,
+                    conv_value: 8166,
+                    conv_per_value: 8014,
+                    allconv: 4599,
+                    allconv_cost: 1513,
+                    allconv_rate: 2.3,
+                    allconv_value: 2741,
+                    allconv_per_value: 3580,
+                },
+            },
+            {
+                name: "Muscat Governorate",
+                coordinates: { latitude: "23.77646815", longitude: "57.78444342091946" },
+                metrics: {
+                    clicks: 2695,
+                    impressions: 9282,
+                    cost: 8778,
+                    ctr: 2.0,
+                    avg_cpc: 5287,
+                    conv: 3791,
+                    conv_cost: 9675,
+                    conv_rate: 1.7,
+                    conv_value: 8166,
+                    conv_per_value: 8014,
+                    allconv: 4599,
+                    allconv_cost: 1513,
+                    allconv_rate: 2.3,
+                    allconv_value: 2741,
+                    allconv_per_value: 3580,
+                },
+            },
+            {
+                name: "Rio de Janeiro",
+                coordinates: { latitude: "-22.9110137", longitude: "-43.2093727" },
+                metrics: {
+                    clicks: 6854,
+                    impressions: 9282,
+                    cost: 8778,
+                    ctr: 2.0,
+                    avg_cpc: 5287,
+                    conv: 3791,
+                    conv_cost: 9675,
+                    conv_rate: 1.7,
+                    conv_value: 8166,
+                    conv_per_value: 8014,
+                    allconv: 4599,
+                    allconv_cost: 1513,
+                    allconv_rate: 2.3,
+                    allconv_value: 2741,
+                    allconv_per_value: 3580,
+                },
+            },
+            {
+                name: "Cordoba",
+                coordinates: { latitude: "-31.4173391", longitude: "-64.183319" },
+                metrics: {
+                    clicks: 5726,
+                    impressions: 9282,
+                    cost: 8778,
+                    ctr: 2.0,
+                    avg_cpc: 5287,
+                    conv: 3791,
+                    conv_cost: 9675,
+                    conv_rate: 1.7,
+                    conv_value: 8166,
+                    conv_per_value: 8014,
+                    allconv: 4599,
+                    allconv_cost: 1513,
+                    allconv_rate: 2.3,
+                    allconv_value: 2741,
+                    allconv_per_value: 3580,
+                },
+            }
+        ];
+
+        let metric = $("#metrics").val();
+        let method = $('input[name="method"]:checked').val();
+
+        $(document).ready(function () {
+
+            let map = new LocationMap('map', 1000, 800);
+            map.render(data, metric, method, 'city');
+
+            $("#metrics").change(function () {
+                metric = $(this).val();
+                map.render(data, metric, method, 'city', );
+            });
+
+            $("#style_method").change(function () {
+                method = $('input[name="method"]:checked').val();
+                map.render(data, metric, method, 'city');
+            })
+        });
+    </script>
+<script type="text/javascript" src="./location.map.js"></script></body>
+
+</html>
